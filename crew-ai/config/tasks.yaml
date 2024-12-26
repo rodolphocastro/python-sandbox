@@ -20,7 +20,7 @@ writing:
     Review the context you got and expand each bullet into a full section for an article.
     Make sure the report is detailed and contains any and all relevant information.
   expected_output: >
-    A fully fledge article with the mains topics, each with a full section of information.
+    An essay that covers the mains topics related to {topic}.
     Formatted as markdown without '```' and written in {language}
   agent: writer
   output_file: outputs/article.md
