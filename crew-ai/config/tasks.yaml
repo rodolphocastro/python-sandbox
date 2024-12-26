@@ -1,0 +1,48 @@
+research:
+  description: >
+    Conduct a thorough research about {topic}
+    Make sure you find any interesting and relevant information given
+    the current year is 2024.
+  expected_output: >
+    A list with 10 bullet points of the most relevant information about {topic}, written in {language}
+  agent: expert
+
+extract_tags:
+  description: >
+    Given the context you got on {topic} find the most appropriate 
+    tags one should use to talk about it on social media.
+  expected_output: >
+    A list of at least 6 tags that are relevant to {topic}, written in {language}
+  agent: media_manager
+
+writing:
+  description: >
+    Review the context you got and expand each bullet into a full section for an article.
+    Make sure the report is detailed and contains any and all relevant information.
+  expected_output: >
+    A fully fledge article with the mains topics, each with a full section of information.
+    Formatted as markdown without '```' and written in {language}
+  agent: writer
+  output_file: outputs/article.md
+
+summarize_to_post:
+  description: >
+    Given the article on {topic} and the tags you got summarize the information into a post tailored for social media
+    that will be posted by {brand}.
+  expected_output: >
+    A post, with up to 400 characters, that providers information on {topic} and calls for user engagement 
+    by using call-to-actions and the tags you got.
+    Formatted as markdown without '```'
+    The post should be written in {language}.
+  output_file: outputs/post.md
+  agent: media_manager
+
+suggest_material:
+  description: >
+    Given the context you got suggest a list of materials that could be used to create a video about {topic}.
+  expected_output: >
+    A list of at least 3 materials that could be used to create a video about {topic}
+    Formatted as markdown without '```'
+    The psot should be written in {language}.
+  agent: media_manager
+  output_file: outputs/material.md
