@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 import logging
 
 logger = logging.getLogger("uvicorn") # use the FastAPI (uvicorn) logger
@@ -28,4 +28,7 @@ def get_book_by_title(title: str):
     logger.info("returning the book with title %s", title)
     for book in BOOKS:
         if book["title"].casefold() == title.casefold():
+            logger.info("found book: %s", book)
             return book
+    logger.info("book not found")
+    raise HTTPException(status_code=404, detail="Book not found")
