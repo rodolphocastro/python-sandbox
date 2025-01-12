@@ -71,3 +71,6 @@ def update_book(updated_book=Body()):
         if BOOKS[i]["title"].casefold() == updated_book["title"].casefold():
             BOOKS[i] = updated_book
             return BOOKS[i]
+    logger.info("the book titled %s isn't in the system, creating it")
+    BOOKS.append(updated_book)
+    return BOOKS[-1]
