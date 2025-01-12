@@ -60,3 +60,14 @@ def add_book(new_book=Body()):
     logger.info("adding a new book: %s", new_book)
     BOOKS.append(new_book) # TODO: This should be checked instead of blindly added to the list
     return BOOKS[-1]
+
+# creating a method that allows one to update a book
+# by sending it's new values, expect for the title, as the body
+# of the PUT request
+@app.put("/books", status_code=status.HTTP_202_ACCEPTED)
+def update_book(updated_book=Body()):
+    logger.info("updating book %s", updated_book)
+    for i in range(len(BOOKS)):
+        if BOOKS[i]["title"].casefold() == updated_book["title"].casefold():
+            BOOKS[i] = updated_book
+            return BOOKS[i]
