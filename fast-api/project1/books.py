@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import Body, FastAPI, HTTPException
 import logging
 
 logger = logging.getLogger("uvicorn") # use the FastAPI (uvicorn) logger
@@ -52,3 +52,10 @@ def get_books_by_author(author_name: str, category: str):
             book["category"].casefold() == category.casefold():
             books.append(book)
     return books
+
+# creating a method that allows one to add a new book to the existing list of books
+# the body of the POST request should contain the book that will be added to the list
+@app.post("/books")
+def add_book(new_book=Body()):
+    logger.info("adding a new book: %s", new_book)
+    BOOKS.append(new_book) # TODO: This should be checked instead of blindly added to the list
