@@ -32,3 +32,23 @@ def get_book_by_title(title: str):
             return book
     logger.info("book not found")
     raise HTTPException(status_code=404, detail="Book not found")
+
+# creating a method that allows one to fetch all books of a certain category
+# the category is passed as a query parameter
+@app.get("/books/")
+def get_books_by_category(category: str):
+    logger.info("returning all the books of category %s", category)
+    books = [book for book in BOOKS if book["category"].casefold() == category.casefold()]
+    return books
+
+# creating a method that allows one to fetch all the books of a given author
+# and then filter them out by Category as a querystring parameter
+@app.get("/books/{author_name}/")
+def get_books_by_author(author_name: str, category: str):
+    logger.info("returning all the books of author %s in category %s", author_name, category)
+    books = []
+    for book in BOOKS:
+        if  book["author"].casefold() == author_name.casefold() and \
+            book["category"].casefold() == category.casefold():
+            books.append(book)
+    return books
