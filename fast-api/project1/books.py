@@ -84,3 +84,5 @@ def delete_book_by_title(book_title: str):
         if BOOKS[i]["title"].casefold() == book_title.casefold():
             BOOKS.pop(i)
             return
+    logger.info("the book %s wasn't found and cannot be deleted", book_title)
+    raise HTTPException(status.HTTP_404_NOT_FOUND)
