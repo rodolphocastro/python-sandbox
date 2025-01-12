@@ -16,6 +16,16 @@ BOOKS = [
 
 # creating a method that'll listen to GET requests on the / route of our server
 @app.get("/books")
-def all_books():
+def get_all_books():
     logger.info("returning all the books")
     return BOOKS
+
+# creating a method that allows one to fetch a book by its title.
+# the title is passed as a path parameter in lieu of an id
+# since we don't have an id field in our books
+@app.get("/books/{title}")
+def get_book_by_title(title: str):
+    logger.info("returning the book with title %s", title)
+    for book in BOOKS:
+        if book["title"].casefold() == title.casefold():
+            return book
