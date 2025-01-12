@@ -74,3 +74,13 @@ def update_book(updated_book=Body()):
     logger.info("the book titled %s isn't in the system, creating it")
     BOOKS.append(updated_book)
     return BOOKS[-1]
+
+# creating a method that allows one to delete a book
+# base on its title only.
+@app.delete("/books/{book_title}", status_code=status.HTTP_200_OK)
+def delete_book_by_title(book_title: str):
+    logger.info("deleting book titled %s", book_title)
+    for i in range(len(BOOKS)):
+        if BOOKS[i]["title"].casefold() == book_title.casefold():
+            BOOKS.pop(i)
+            return
