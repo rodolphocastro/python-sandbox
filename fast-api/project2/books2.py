@@ -36,11 +36,22 @@ class BookPostRequest(BaseModel):
     """
     pydantic data model for POST'ing a book to the system.
     """
-    id: Optional[int] = None
+    id: Optional[int] = Field(description="the id of the book, optional when creating", default=None)
     title: str = Field(min_length=3)
     author: str = Field(min_length=1)
     description: str = Field(min_length=0, max_length=100)
     rating: int = Field(gt=0, lt=6)
+
+    model_config = {
+        'json_schema_extra': {
+            'example': {
+                'title': "Harry Potter and the Philosopher's stone",
+                'author': "J.K. Rowling",
+                'description': "the very first harry potter book",
+                'rating': 5
+            }
+        }
+    }
 
 def generate_book_id(book: Book) -> Book:
     """
