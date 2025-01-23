@@ -34,6 +34,9 @@ async def get_all_books():
 
 @app.get("/books/{book_id}")
 async def get_book(book_id: int):
+    """
+    returns a single book based on its ID.
+    """
     for book in BOOKS:
         if book.id == book_id:
             return book
@@ -41,6 +44,9 @@ async def get_book(book_id: int):
 
 @app.get("/books/")
 async def get_books_by_rating(rating: int):
+    """
+    returns all books that match the specific rating.
+    """
     result = []
     for book in BOOKS:
         if book.rating == rating:
@@ -90,3 +96,14 @@ async def create_new_book(payload: BookPostRequest):
     # important: on Pydantic >=3 this would be **payload.dict()
     book = Book(**payload.model_dump())
     BOOKS.append(generate_book_id(book))
+
+@app.put("/books")
+async def update_book(payload: BookPostRequest):
+    """
+    updates a single book.
+    """
+    for i in range(len(BOOKS)):
+        if BOOKS[i].id == payload.id:
+            BOOKS[i] = Book(**payload.model_dump())
+            return BOOKS[i]
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
