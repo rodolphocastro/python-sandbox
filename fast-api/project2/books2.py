@@ -47,4 +47,6 @@ async def create_new_book(payload: BookPostRequest):
     """
     adds a new book to the system.
     """
-    BOOKS.append(payload)
+    # important: on Pydantic >=3 this would be **payload.dict()
+    book = Book(**payload.model_dump())
+    BOOKS.append(book)
