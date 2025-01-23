@@ -1,5 +1,6 @@
 from typing import Self
 from fastapi import Body, FastAPI
+from pydantic import BaseModel
 
 class Book:
     """
@@ -31,8 +32,18 @@ async def get_all_books():
     """
     return BOOKS
 
+class BookPostRequest(BaseModel):
+    """
+    pydantic data model for POST'ing a book to the system.
+    """
+    id: int
+    title: str
+    author: str
+    description: str
+    rating: int
+
 @app.post("/books")
-async def create_new_book(payload=Body()):
+async def create_new_book(payload: BookPostRequest):
     """
     adds a new book to the system.
     """
