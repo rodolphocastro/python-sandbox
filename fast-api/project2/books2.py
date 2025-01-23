@@ -1,6 +1,6 @@
-from typing import Self
+from typing import Optional, Self
 from fastapi import Body, FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 class Book:
     """
@@ -36,11 +36,24 @@ class BookPostRequest(BaseModel):
     """
     pydantic data model for POST'ing a book to the system.
     """
-    id: int
-    title: str
-    author: str
-    description: str
-    rating: int
+    id: Optional[int] = None
+    title: str = Field(min_length=3)
+    author: str = Field(min_length=1)
+    description: str = Field(min_length=0, max_length=100)
+    rating: int = Field(gt=0, lt=6)
+
+def generate_book_id(book: Book) -> Book:
+    """
+    assigns an ID to a book based on the elements within then BOOKS collection.
+    """
+    # if there are books in the system find the last Book's ID and increment it
+    if len(BOOKS) > 0:
+        book.id = BOOKS[-1].id + 1
+    else:
+        # otherwise this is the first book, its ID should be 1
+        book.id = 1
+
+    return book
 
 @app.post("/books")
 async def create_new_book(payload: BookPostRequest):
@@ -49,4 +62,4 @@ async def create_new_book(payload: BookPostRequest):
     """
     # important: on Pydantic >=3 this would be **payload.dict()
     book = Book(**payload.model_dump())
-    BOOKS.append(book)
+    BOOKS.append(generate_book_id(book))
