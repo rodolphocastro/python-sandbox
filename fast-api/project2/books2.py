@@ -1,5 +1,5 @@
 from typing import Self
-from fastapi import FastAPI
+from fastapi import Body, FastAPI
 
 class Book:
     """
@@ -15,7 +15,7 @@ class Book:
 
 app = FastAPI()
 
-BOOKS = [
+BOOKS: list[Book] = [
     Book(1, "Computer Science Pro", "Doe, John", "A very nice book", 5),
     Book(2, "Be FAST with FastAPI", "Doe, John", "A great book", 5),
     Book(3, "Master endpoints", "Doe, John", "An awesome book", 5),
@@ -30,3 +30,10 @@ async def get_all_books():
     returns all the books currently in the system.
     """
     return BOOKS
+
+@app.post("/books")
+async def create_new_book(payload=Body()):
+    """
+    adds a new book to the system.
+    """
+    BOOKS.append(payload)
