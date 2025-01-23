@@ -39,6 +39,15 @@ async def get_book(book_id: int):
             return book
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
+@app.get("/books/")
+async def get_books_by_rating(rating: int):
+    result = []
+    for book in BOOKS:
+        if book.rating == rating:
+            result.append(book)
+
+    return result
+
 class BookPostRequest(BaseModel):
     """
     pydantic data model for POST'ing a book to the system.
