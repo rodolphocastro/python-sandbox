@@ -107,3 +107,12 @@ async def update_book(payload: BookPostRequest):
             BOOKS[i] = Book(**payload.model_dump())
             return BOOKS[i]
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+
+@app.delete("/books/{book_id}")
+async def delete_book(book_id: int):
+    """
+    deletes a single book based on its ID.
+    """
+    for book in BOOKS:
+        if book.id == book_id:
+            BOOKS.remove(book)
