@@ -1,5 +1,5 @@
 from typing import Optional, Self
-from fastapi import Body, FastAPI
+from fastapi import Body, FastAPI, HTTPException, status
 from pydantic import BaseModel, Field
 
 class Book:
@@ -31,6 +31,13 @@ async def get_all_books():
     returns all the books currently in the system.
     """
     return BOOKS
+
+@app.get("/books/{book_id}")
+async def get_book(book_id: int):
+    for book in BOOKS:
+        if book.id == book_id:
+            return book
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
 class BookPostRequest(BaseModel):
     """
