@@ -9,8 +9,9 @@
             "type": "debugpy",
             "request": "launch",
             "module": "uvicorn",
+            "cwd": "${workspaceFolder}/TodoApp",
             "args": [
-                "todos:app",
+                "main:app",
                 "--reload"
             ],
             "jinja": false
