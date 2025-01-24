@@ -1,7 +1,7 @@
-from database import Base
+from database import database
 from sqlalchemy import Column, Integer, String, Boolean
 
-class Todos(Base):
+class Todos(database):
     """
     a model representing a To-Do object.
     """
