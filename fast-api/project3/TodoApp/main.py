@@ -1,6 +1,6 @@
 from typing import Annotated
 from sqlalchemy.orm import Session
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Path
 from database import engine, local_session
 from models import Todos
 from starlette import status
@@ -31,15 +31,18 @@ db_dependency = Annotated[Session, Depends(get_db)]
 dependency injection hook for our database connection
 """
 
-@app.get("/todos")
+@app.get("/todos", status_code=status.HTTP_200_OK)
 async def get_all_todos(db: db_dependency):
     """
-    gets all the TODOs currently in the system.
+    gets all the to-dos currently in the system.
     """
     return db.query(Todos).all()
 
-@app.get("/todos/{todo_id}")
-async def get_todo(db: db_dependency, todo_id: int):
+@app.get("/todos/{todo_id}", status_code=status.HTTP_200_OK)
+async def get_todo(db: db_dependency, todo_id: int = Path(gt=0)):
+    """
+    gets a single to-do based on its primary ID.
+    """
     todo_model = db.query(Todos).filter(Todos.id == todo_id).first()
     if todo_model is not None:
         return todo_model
