@@ -1,8 +1,9 @@
-from typing import Annotated, List
+from typing import Annotated
 from sqlalchemy.orm import Session
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, HTTPException
 from database import engine, local_session
 from models import Todos
+from starlette import status
 import models
 
 app = FastAPI()
@@ -36,3 +37,11 @@ async def get_all_todos(db: db_dependency):
     gets all the TODOs currently in the system.
     """
     return db.query(Todos).all()
+
+@app.get("/todos/{todo_id}")
+async def get_todo(db: db_dependency, todo_id: int):
+    todo_model = db.query(Todos).filter(Todos.id == todo_id).first()
+    if todo_model is not None:
+        return todo_model
+
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"a TODO with id {todo_id} wasn't found")
