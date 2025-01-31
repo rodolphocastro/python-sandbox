@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, List
 from sqlalchemy.orm import Session
 from fastapi import Depends, FastAPI
 from database import engine, local_session
@@ -25,8 +25,13 @@ def get_db():
     finally:
         db.close()
 
+db_dependency = Annotated[Session, Depends(get_db)]
+"""
+dependency injection hook for our database connection
+"""
+
 @app.get("/todos")
-async def get_all_todos(db: Annotated[Session, Depends(get_db)]):
+async def get_all_todos(db: db_dependency):
     """
     gets all the TODOs currently in the system.
     """
