@@ -21,3 +21,15 @@ database = declarative_base()
 """
 our abstracted database.
 """
+
+def get_db():
+    """
+    gets a working local session of our database.
+    it automatically closes the database connection once done.
+    """
+    db = local_session()
+    try:
+        # yield is a type of return with extra logic to handle doing something after it is finished.ß
+        yield db
+    finally:
+        db.close()
