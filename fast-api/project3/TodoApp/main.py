@@ -20,6 +20,16 @@ db_dependency = Annotated[Session, Depends(get_db)]
 dependency injection hook for our database connection
 """
 
+def __get_todo_by_id(db: Session, todo_id: int):
+    """
+    gets a todo by its id.
+    Throws a 404 error if nothing is found.
+    """
+    todo_model = db.query(Todos).filter(Todos.id == todo_id).first()
+    if todo_model is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Todo with id {todo_id} wasn't found")
+    return todo_model
+
 @app.get("/todos", status_code=status.HTTP_200_OK, response_model=List[TodosDTO])
 async def get_all_todos(db: db_dependency) -> List[Todos]:
     """
@@ -35,11 +45,7 @@ async def get_todo(db: db_dependency,
     """
     gets a single to-do based on its primary ID.
     """
-    todo_model = db.query(Todos).filter(Todos.id == todo_id).first()
-    if todo_model is not None:
-        return todo_model
-
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"a TODO with id {todo_id} wasn't found")
+    return __get_todo_by_id(db, todo_id)
 
 @app.post("/todos", status_code=status.HTTP_201_CREATED)
 async def create_todo(db: db_dependency,
@@ -59,9 +65,7 @@ async def replace_todo(db: db_dependency,
     """
     replaces a todo's data with new data.
     """
-    todo_model = db.query(Todos).filter(Todos.id == todo_id).first()
-    if todo_model is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Todo with id {todo_id} wasn't found")
+    todo_model = __get_todo_by_id(db, todo_id)
     todo_model = updated_todo.apply_to_todos(todo_model)
     db.add(todo_model)
     db.commit()
@@ -72,8 +76,6 @@ async def delete_todo(db: db_dependency,
     """
     deletes a todo.
     """
-    todo_model = db.query(Todos).filter(Todos.id == todo_id).first()
-    if todo_model is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Todo with id {todo_id} wasn't found")
+    todo_model = __get_todo_by_id(db, todo_id)
     db.delete(todo_model)
     db.commit()
