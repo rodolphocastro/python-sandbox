@@ -1,7 +1,7 @@
 from typing import Annotated, List
 from sqlalchemy.orm import Session
 from fastapi import Depends, FastAPI, HTTPException, Path
-from dtos import TodosDTO
+from dtos import CreateTodoDTO, TodosDTO
 from database import engine, local_session
 from models import Todos
 from starlette import status
@@ -51,3 +51,13 @@ async def get_todo(db: db_dependency, todo_id: int = Path(gt=0)):
         return todo_model
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"a TODO with id {todo_id} wasn't found")
+
+@app.post("/todos", status_code=status.HTTP_201_CREATED)
+async def create_todo(db: db_dependency, new_todo: CreateTodoDTO) -> int:
+    """
+    creates a new to-do.
+    """
+    todo = new_todo.to_Todos()
+    db.add(todo)
+    db.commit()
+    return todo.id
