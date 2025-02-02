@@ -54,8 +54,8 @@ async def create_todo(db: db_dependency,
 
 @app.put("/todos/{todo_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def replace_todo(db: db_dependency,
-                       todo_id: int,
-                       updated_todo: CreateTodoDTO):
+                       updated_todo: CreateTodoDTO,
+                       todo_id: int = Path(gt=0)):
     """
     replaces a todo's data with new data.
     """
