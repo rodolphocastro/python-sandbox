@@ -18,6 +18,16 @@ class CreateTodoDTO(BaseModel):
         """
         return Todos(**self.model_dump())
 
+    def apply_to_todos(self: Self, todo: Todos) -> Todos:
+        """
+        applies the data in this instance over to a Todos instance
+        """
+        todo.complete = self.complete
+        todo.description = self.description
+        todo.priority = self.priority
+        todo.title = self.title
+        return todo
+
 class TodosDTO(BaseModel):
     """
     a DTO (Data Transfer Object) to report on TODOs.
