@@ -16,12 +16,7 @@ class CreateTodoDTO(BaseModel):
         """
         creates a new Todos instance using this instance's data.
         """
-        todo = Todos()
-        todo.complete = self.complete
-        todo.description = self.description
-        todo.priority = self.priority
-        todo.title = self.title
-        return todo
+        return Todos(**self.model_dump())
 
 class TodosDTO(BaseModel):
     """
